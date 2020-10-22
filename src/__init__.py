@@ -170,11 +170,13 @@ class HTTPHandler:
     def get_response_content(self, response: requests.Response):
         # TODO: Handle JSON Decode Error
         # TODO: Handle BeautifulSoup Errors
-        if 'text/html' in response.headers['Content-Type']:
-            return BeautifulSoup(response.content)
-        elif 'text/plain' in response.headers['Content-Type']:
-            return response.text
-        elif 'json' in response.headers['Content-Type']:
-            return response.json()
-        else:
-            raise HTTPHandlerException(f'No handler implemented for Content-Type: {response.headers["Content-Type"]}')
+        if 'Content-Type' in response.headers:
+            if 'text/html' in response.headers['Content-Type']:
+                return BeautifulSoup(response.content)
+            elif 'text/plain' in response.headers['Content-Type']:
+                return response.text
+            elif 'json' in response.headers['Content-Type']:
+                return response.json()
+            else:
+                raise HTTPHandlerException(f'No handler implemented for Content-Type: {response.headers["Content-Type"]}')
+        return response.json()
