@@ -3,7 +3,9 @@ import requests
 from bs4 import BeautifulSoup
 
 class HTTPHandlerException(Exception):
-    pass
+    def __init__(self, error_msg=''):
+        super().__init__() 
+        self.error_msg = error_msg
 
 class HTTPHandler:
     def __init__(self, proxies=None):
@@ -36,9 +38,7 @@ class HTTPHandler:
                 **kwargs
             )
         except requests.exceptions.RequestException as error:
-            return {
-                'error': error
-            }
+            raise HTTPHandlerException(error_msg=error)
 
         return self.response_handle(response)
 
@@ -68,9 +68,7 @@ class HTTPHandler:
                 **kwargs
             )
         except requests.exceptions.RequestException as error:
-            return {
-                'error': error
-            }
+            raise HTTPHandlerException(error_msg=error)
 
         return self.response_handle(response)
 
@@ -99,9 +97,7 @@ class HTTPHandler:
                 **kwargs
             )
         except requests.exceptions.RequestException as error:
-            return {
-                'error': error
-            }
+            raise HTTPHandlerException(error_msg=error)
 
         return self.response_handle(response)
 
@@ -128,9 +124,7 @@ class HTTPHandler:
                 **kwargs
             )
         except requests.exceptions.RequestException as error:
-            return {
-                'error': error
-            }
+            raise HTTPHandlerException(error_msg=error)
 
         return self.response_handle(response)
 
@@ -179,4 +173,4 @@ class HTTPHandler:
                 return response.json()
             else:
                 raise HTTPHandlerException(f'No handler implemented for Content-Type: {response.headers["Content-Type"]}')
-        return response.json()
+        return None
